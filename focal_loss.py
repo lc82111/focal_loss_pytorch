@@ -32,9 +32,9 @@ class FocalLoss_v2(nn.Module):
         if self.alpha.device != logit.device:
             self.alpha = self.alpha.to(logit.device)
         if logit.dim() > 2:
-            logit = logit.view(logit.size(0), logit.size(1), -1) #(N,C,H*W)
-            logit = logit.permute(0, 2, 1).contiguous() #(N,H*W,C)
-            logit = logit.view(-1, logit.size(-1)) #(N*H*W,C)
+            logit = logit.view(logit.size(0), logit.size(1), -1)#(N,C,d=d1*d2*d3)
+            logit = logit.permute(0,2,1)#(N,d,C)
+            logit = logit.view(-1, self.num_class) #(N*d,C)
         target = target.view(-1) #(N*H*W)
         #alpha  = self.alpha.view(1, self.num_class) #(1,C)
         alpha = self.alpha[target.cpu().long()] #(N*H*W)
